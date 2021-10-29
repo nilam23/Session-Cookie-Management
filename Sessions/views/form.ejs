@@ -1,0 +1,10 @@
+<h3>Hi, welcome <%= name %></h3>
+
+<form action='/post-name' method='post'>
+    <input type="text" name='name' placeholder="Enter your name">
+    <input type="hidden" name='_csrf' value="<%=csrfToken%>">
+    <button>Submit</button>
+</form>
+<form action="/logout" method="post">
+    <button>Logout</button>
+</form>
