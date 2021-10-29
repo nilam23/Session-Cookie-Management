@@ -4,11 +4,21 @@ const bodyParser = require('body-parser');
 const csurf = require('csurf');
 const session = require('express-session');
 const dotenv = require('dotenv').config();
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
+
+const dburl = 'mongodb://localhost/demo_sessions';
+mongoose.connect(dburl, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Database connected.'))
+    .catch(err => console.log(`DB Error: ${err}`));
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
+    store: MongoStore.create({
+        mongoUrl: dburl
+    }),
     secret: process.env.secret,
     cookie: {},
     resave: false,
@@ -30,7 +40,8 @@ app.post('/post-name', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-    req.session.destroy();
+    // req.session.destroy();
+    req.session.user = null;
     res.redirect('/');
 });
 
